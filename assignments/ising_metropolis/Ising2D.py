@@ -83,8 +83,8 @@ print("Initial magnetization", magnetization[0])
 print("Average magnetization after thermalization",
       sum(magnetization[int(0.5 * steps):]) / (steps - int(0.5 * steps)))
 
-plt.ylim(-1, 1)
 plt.plot(timelist, energylist)
 plt.show()
+plt.ylim(-1, 1)
 plt.plot(timelist, magnetization)
 plt.show()
