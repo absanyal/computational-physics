@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 J = 1
 h = 0
 # T = 2.3
-steps = 100000
+steps = 1000
 
 length = 10
 breadth = 10
@@ -56,7 +56,7 @@ avg_e_list = []
 
 T = 4
 T_list = []
-while (T >= 0.05):
+while (T >= 0.1):
     magnetization = [sum(sum(lattice))/(length*breadth)]
     energy = 0
     for i in range(length):
@@ -89,12 +89,13 @@ while (T >= 0.05):
         # if (t > 0 and t % (steps/10) == 0):
         #     print("Done for", t, "steps.")
     avg_m = sum(magnetization[int(0.5 * steps):])/(steps - int(0.5 * steps))
-    avg_e = sum(energylist[int(0.5 * steps):])/(steps - int(0.5 * steps))
+    avg_e = sum(energylist[int(0.5 * steps):])/(steps - int(0.5 * steps)) \
+            / (length * breadth)
     avg_m_list.append(avg_m)
     avg_e_list.append(avg_e)
     T_list.append(T)
     print(round(T, 2), '\t', round(avg_m, 5), '\t', round(avg_e, 5))
-    T -= 0.05
+    T -= 0.1
 
 
 plt.plot(T_list, avg_e_list)
@@ -102,6 +103,7 @@ plt.title('Energy vs T')
 plt.ylabel('Average energy per site')
 plt.xlabel('Temperature')
 plt.savefig('E_vs_T.pdf')
+plt.show()
 plt.ylim(-1, 1)
 plt.plot(T_list, avg_m_list)
 plt.title('Magnetization vs T')
