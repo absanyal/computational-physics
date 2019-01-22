@@ -3,15 +3,15 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-#np.random.seed(617)
+np.random.seed(617)
 
 J = 1
 h = 0
 # T = 2.3
-steps = 1000
+steps = 100
 
-length = 10
-breadth = 10
+length = 20
+breadth = 20
 
 upspin = 1
 downspin = -1
@@ -56,7 +56,7 @@ avg_e_list = []
 
 T = 4
 T_list = []
-while (T >= 0.1):
+while (T > 0):
     magnetization = [sum(sum(lattice))/(length*breadth)]
     energy = 0
     for i in range(length):
@@ -83,7 +83,7 @@ while (T >= 0.1):
 
         # timelist.append(t)
         energylist.append(energy)
-        magnetization.append(sum(sum(lattice))/(length*breadth))
+        magnetization.append( abs(sum(sum(lattice))/(length*breadth)) )
     #    print(lattice)
 
         # if (t > 0 and t % (steps/10) == 0):
@@ -95,18 +95,19 @@ while (T >= 0.1):
     avg_e_list.append(avg_e)
     T_list.append(T)
     print(round(T, 2), '\t', round(avg_m, 5), '\t', round(avg_e, 5))
-    T -= 0.1
+    T -= 0.05
 
 
-plt.plot(T_list, avg_e_list)
 plt.title('Energy vs T')
 plt.ylabel('Average energy per site')
 plt.xlabel('Temperature')
+plt.plot(T_list, avg_e_list)
 plt.savefig('E_vs_T.pdf')
-plt.show()
+# plt.show()
+plt.clf()
 plt.ylim(-1, 1)
-plt.plot(T_list, avg_m_list)
 plt.title('Magnetization vs T')
 plt.ylabel('Average magnetization per site')
 plt.xlabel('Temperature')
+plt.plot(T_list, avg_m_list)
 plt.savefig('m_vs_T.pdf')
