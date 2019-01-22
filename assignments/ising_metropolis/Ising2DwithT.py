@@ -3,12 +3,12 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-# np.random.seed(1706)
+#np.random.seed(617)
 
 J = 1
 h = 0
 # T = 2.3
-steps = 10000
+steps = 100000
 
 length = 10
 breadth = 10
@@ -38,7 +38,6 @@ def energy_change(i, j):
 
     return (e_f - e_i)
 
-
 energy = 0
 for i in range(length):
     for j in range(breadth):
@@ -49,15 +48,24 @@ for i in range(length):
 
 # print(energy)
 
-energylist = [energy]
+
 timelist = [0]
 
-avg_m_list = [sum(sum(lattice))/(length*breadth)]
+avg_m_list = []
+avg_e_list = []
 
 T = 4
-T_list = [T]
-while (T > 0.1):
+T_list = []
+while (T >= 0.05):
     magnetization = [sum(sum(lattice))/(length*breadth)]
+    energy = 0
+    for i in range(length):
+        for j in range(breadth):
+            s = lattice[i, j]
+            syp1 = lattice[(i+1) % length, j]
+            sxp1 = lattice[i, (j+1) % breadth]
+            energy += -J*(s * (sxp1 + syp1)) - h * s
+    energylist = [energy]
     for t in range(1, steps):
         for i in range(length):
             for j in range(breadth):
@@ -74,29 +82,29 @@ while (T > 0.1):
                         energy += delta_e
 
         # timelist.append(t)
-        # energylist.append(energy)
+        energylist.append(energy)
         magnetization.append(sum(sum(lattice))/(length*breadth))
     #    print(lattice)
 
         # if (t > 0 and t % (steps/10) == 0):
         #     print("Done for", t, "steps.")
-    avg_m = sum(magnetization[int(0.5 * steps):]) / (steps - int(0.5 * steps))
+    avg_m = sum(magnetization[int(0.5 * steps):])/(steps - int(0.5 * steps))
+    avg_e = sum(energylist[int(0.5 * steps):])/(steps - int(0.5 * steps))
     avg_m_list.append(avg_m)
+    avg_e_list.append(avg_e)
     T_list.append(T)
-    print(round(T, 2), '\t', round(avg_m, 5))
-    T -= 0.1
+    print(round(T, 2), '\t', round(avg_m, 5), '\t', round(avg_e, 5))
+    T -= 0.05
 
 
-# print(energy)
-
-# print(lattice)
-# print("Initial magnetization", magnetization[0])
-# print("Average magnetization after thermalization",
-#       sum(magnetization[int(0.5 * steps):]) / (steps - int(0.5 * steps)))
-
-# plt.plot(timelist, energylist)
-# plt.show()
+plt.plot(T_list, avg_e_list)
+plt.title('Energy vs T')
+plt.ylabel('Average energy per site')
+plt.xlabel('Temperature')
+plt.savefig('E_vs_T.pdf')
 plt.ylim(-1, 1)
-# plt.plot(timelist, magnetization)
 plt.plot(T_list, avg_m_list)
-plt.show()
+plt.title('Magnetization vs T')
+plt.ylabel('Average magnetization per site')
+plt.xlabel('Temperature')
+plt.savefig('m_vs_T.pdf')
